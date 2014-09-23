@@ -1,12 +1,5 @@
 package parser;
 
 public class ReadXML {
-//,jhkjhkkjhkj
-	//ghjghjghjgjh
-	//kurva anyád
-	//dsahjkdsahjkdsahjk
-	//gecis fasz
-	//faszkalap geci
-	
-	//fghfgh
+	for(int i= 0;i<21;i++);
 }
