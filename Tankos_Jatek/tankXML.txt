@@ -1,0 +1,19 @@
+<tank>
+	<id> "1" </id>
+	<team> "0" </team>
+	<posx> "32" </posx>
+	<posy> "12" </posy>
+	<orientation> "N" </orientation>
+	
+	<bullet>
+		<id> "1" </id>
+		<posx> "31" </posx>
+		<posy> "14" </posy>
+	</bullet>
+
+	<bullet>
+		<id> "2" </id>
+		<posx> "34" </posx>
+		<posy> "17" </posy>
+	</bullet>
+</tank>
