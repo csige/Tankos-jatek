@@ -1,4 +1,4 @@
-package parser;
+package server;
 
 public class WriteXML {
 
