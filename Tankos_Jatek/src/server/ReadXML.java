@@ -1,4 +1,4 @@
-package server;
+﻿package server;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -12,6 +12,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 public class ReadXML extends DefaultHandler {
+
 
 	int id, teamid, posx, posy, bulletposx, bulletposy;
 	Orientation orientation, bulletOrientation;
