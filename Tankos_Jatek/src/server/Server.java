@@ -18,6 +18,7 @@ public class Server extends Thread{
 	Socket newClient;
 	ArrayList<Socket> clientSockets;
 	private static WriteXML xmlCreator;
+	boolean interrupted = false;
 	String[] message = {"1", "2", "3", "4", "N", "1", "2", "3", "S"};
 	   
 	   public Server(int port) throws IOException
@@ -28,7 +29,7 @@ public class Server extends Thread{
 
 	   public void run()
 	   {
-	      while(true)
+	      while(!interrupted)
 	      {
 	         try
 	         {
@@ -86,6 +87,7 @@ public class Server extends Thread{
 	   
 	   public class ClientThread extends Thread{
 		   protected Socket socket;
+		   boolean interrupted = false;
 
 		    public ClientThread(Socket clientSocket) {
 		        this.socket = clientSocket;
@@ -103,11 +105,9 @@ public class Server extends Thread{
 		            return;
 		        }
 		        
-		        while (true) {
+		        while (!interrupted) {
 		            try {
 		            	
-		            	out.writeUTF(xmlCreator.createXMLString(message));
-	                    out.flush();
 		            	
 		            	StringBuilder builder = new StringBuilder();
 		            	String aux = "";
@@ -123,8 +123,11 @@ public class Server extends Thread{
 		                    return;
 		                } else {
 		                	System.out.println(text);
-		                	
 		                }
+		                
+		                out.writeUTF(xmlCreator.createXMLString(message));
+		                out.flush();
+		                
 		            } catch (IOException e) {
 		                e.printStackTrace();
 		                return;

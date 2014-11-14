@@ -1,6 +1,7 @@
 package server;
 
 import java.io.File;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -20,11 +21,10 @@ public class WriteXML {
 	
 	 
 	
-	public static void main(String[] args) {
+	public static String createXMLString(String[] args) {
 		try{
-			Scanner scn = new Scanner(System.in);
 			
-			String id_, team_, posx_, posy_, orientation_, bposx, bposy, bid;
+			String id_, team_, posx_, posy_, orientation_, bposx, bposy, bid, borientation;
 			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder docBuilder;
 			docBuilder = docFactory.newDocumentBuilder();
@@ -37,12 +37,6 @@ public class WriteXML {
 			ArrayList<String> bulletContainer = new ArrayList<>();
 			
 			
-			int count = 0, count2=0;
-			boolean needBullet = false;
-			String userInput = "";
-			while(!userInput.equals("q")){
-				count++;
-				
 				Element tank = doc.createElement("tank");
 				Element id = doc.createElement("id");
 				Element team = doc.createElement("team");
@@ -50,52 +44,24 @@ public class WriteXML {
 				Element posy = doc.createElement("posy");
 				Element orientation = doc.createElement("orientation");
 				
-				id_ = String.valueOf(count);
+				id_ = args[0];
 				
-				System.out.println("team:");
-				userInput = scn.nextLine();
-				team_ = userInput;
+				team_ = args[1];
 				
-				System.out.println("posx:");
-				userInput = scn.nextLine();
-				posx_ = userInput;
+				posx_ = args[2];
 				
-				System.out.println("posy:");
-				userInput = scn.nextLine();
-				posy_ = userInput;
+				posy_ = args[3];
 				
-				System.out.println("orientation:");
-				userInput = scn.nextLine();
-				orientation_ = userInput;
+				orientation_ = args[4];
 				
-				System.out.println("Ha NE legyen bullet-ja nyomj entert, egyébként y-t aztan entert!");
-				userInput = scn.nextLine();
-				if(!userInput.equals("")) needBullet = true;
-				else needBullet = false;
-				
-				while(needBullet && !userInput.equals("q")){
-					count2++;
-					bid = String.valueOf(count2);
+					bid = args[5];
 					
-					System.out.println("Bullet posx:");
-					userInput = scn.nextLine();
-					bposx = userInput;
+					bposx = args[6];
 					
-					System.out.println("Bullet posy:");
-					userInput = scn.nextLine();
-					bposy = userInput;
+					bposy = args[7];
 					
-					bulletContainer.add(bid);  
-					bulletContainer.add(bposx);  
-					bulletContainer.add(bposy);  
+					borientation = args[8];
 					
-					System.out.println("Meg egy bullet felvetelehez nyomj entert, egyebkent 'q'-t!");
-					userInput = scn.nextLine();
-					
-					
-				}
-				count2=0;
-				
 				//write to xml
 				id.appendChild(doc.createTextNode(id_));
 				team.appendChild(doc.createTextNode(team_));
@@ -109,64 +75,56 @@ public class WriteXML {
 				tank.appendChild(posy);
 				tank.appendChild(orientation);
 				
-				if(needBullet){
-					for(int i = 0;i<bulletContainer.size();i+=3){
 						Element bullet = doc.createElement("bullet");
 						id = doc.createElement("id");
-						id.appendChild(doc.createTextNode(bulletContainer.get(i)));
+						id.appendChild(doc.createTextNode(bid));
 						
 						posx = doc.createElement("posx");
-						posx.appendChild(doc.createTextNode(bulletContainer.get(i+1)));
+						posx.appendChild(doc.createTextNode(bposx));
 						
 						posy = doc.createElement("posy");
-						posy.appendChild(doc.createTextNode(bulletContainer.get(i+2)));
+						posy.appendChild(doc.createTextNode(bposy));
+						
+						orientation = doc.createElement("orientation");
+						orientation.appendChild(doc.createTextNode(borientation));
 						
 						bullet.appendChild(id);
 						bullet.appendChild(posx);
 						bullet.appendChild(posy);
+						bullet.appendChild(orientation);
 						
 						tank.appendChild(bullet);
-					}
-				}
 				
 				root.appendChild(tank);
 				
-				bulletContainer.clear();
-			
-				
-				System.out.println("Meg egy tank felvetelehez nyomj entert, egyebkent 'q'-t!");
-				userInput = scn.nextLine();
-				
-			}
-			
-			StreamResult result = new StreamResult(new File("D:\\Java projects\\Tankos-jatek\\Tankos_Jatek\\tankos_jatek.xml"));
-			saveXML(doc, result);
-			
-			scn.close();
-			
+			return getStringFromDocument(doc);
 			
 		} catch (ParserConfigurationException e) {
 			e.printStackTrace();
+			return null;
 		}
 		
 	}
 	
-	static void saveXML(Document doc, StreamResult result){
-		
-		try{
-			
-			TransformerFactory transformerFactory = TransformerFactory.newInstance();
-			Transformer transformer = transformerFactory.newTransformer();
-			DOMSource source = new DOMSource(doc);
-			transformer.transform(source, result);
-			System.out.println("XML File saved!");
-			
-		}catch(TransformerException tfe){
-			System.out.println("TransformerError!");
-			tfe.printStackTrace();
-		}
-		 
-	}
+	//method to convert Document to String
+	public static String getStringFromDocument(Document doc)
+	{
+	    try
+	    {
+	       DOMSource domSource = new DOMSource(doc);
+	       StringWriter writer = new StringWriter();
+	       StreamResult result = new StreamResult(writer);
+	       TransformerFactory tf = TransformerFactory.newInstance();
+	       Transformer transformer = tf.newTransformer();
+	       transformer.transform(domSource, result);
+	       return writer.toString();
+	    }
+	    catch(TransformerException ex)
+	    {
+	       ex.printStackTrace();
+	       return null;
+	    }
+	} 
 	
 
 }
